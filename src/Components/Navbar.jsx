@@ -5,9 +5,9 @@ import { navLinks } from '../../constants'
 import { useGSAP } from '@gsap/react' 
  
 
-
-const Navbar = () => {   
 gsap.registerPlugin(ScrollTrigger) 
+const Navbar = () => {   
+
 
      useGSAP (() => { 
         const navTween = gsap.timeline({ 
@@ -31,7 +31,7 @@ gsap.registerPlugin(ScrollTrigger)
     <nav> 
         <div> 
             <a href="#home" className='flex items-center gap-2'> 
-                <img src="/public/images/logo.png" alt="logo" /> 
+                <img src="/images/logo.png" alt="logo" /> 
                 <p>Velvet Pour</p>
             </a> 
              
