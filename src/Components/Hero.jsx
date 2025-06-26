@@ -1,11 +1,18 @@
 import { useGSAP } from '@gsap/react'
 import { SplitText,} from 'gsap/all' 
 import React from 'react'  
-import gsap from 'gsap' 
+import gsap from 'gsap'  
+import { useRef } from 'react' 
+import { useMediaQuery } from 'react-responsive'
  
 
 
-const Hero = () => {   
+const Hero = () => {    
+     
+     
+     const videoRef = useRef(); 
+      
+     const isMobile = useMediaQuery({maxWidth:768})
     
     
     useGSAP(() => { 
@@ -44,12 +51,44 @@ const Hero = () => {
             }
         }) 
         .to('.right-leaf',{y: 200}, 0) 
-        .to('.left-leaf',{y: -200}, 0)
-        
+        .to('.left-leaf',{y: -200}, 0) 
          
+        // create a gsap timeline for that animtes the video as the user scroll throuh the hero.  
+       const startValue = isMobile? "top 50%" : "center 60%"
+       const endValue = isMobile ? "120% 50%" : "bottom top" 
+        
+    const tl =     gsap.timeline({ 
+            scrollTrigger: { 
+                trigger: 'video', 
+                start: startValue, 
+                end: endValue, 
+                scrub: true,  
+                pin: true,
+                markers: false,  
+
+            }
+        })   
+        // apply scale and opacity to the video as the user scrolls through the hero section
+        tl.to(videoRef.current, {    
+            scale: 1.2, 
+            opacity: 0.5, 
+            duration: 1, 
+            ease: 'power1.inOut', 
+        }, 0)
+
+         
+        videoRef.current.onloadedmetadata = () => {
+            tl.to(videoRef.current, {  
+                currentTime: videoRef.current.duration, 
+                 
+                duration: videoRef.current.duration, 
+            })
+        }
+       
     
     },[])
-  return ( 
+  return (  
+    <>
      
     <section id='hero'className='noisy'>  
 
@@ -92,8 +131,23 @@ const Hero = () => {
 
      </div>
 
-    </section>
+    </section>  
+     
+    <div>   
+         
+         <video  
+         ref = {videoRef}
+         src='/videos/input.mp4'  
+         muted 
+         playsInline
+          
+         preload="auto" 
+    
 
+          />
+         </div>
+
+ </>
   )
 }
 
